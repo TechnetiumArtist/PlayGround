@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#10131c">
+  <title>SBURB // Session Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="SBURB home"><span class="brand-mark">S</span><span>SBURB<span class="brand-sub">SESSION CONSOLE</span></span></a>
+      <div class="top-status"><span class="status-dot"></span><span id="headerStatus">NO ACTIVE SESSION</span><button class="icon-button" id="helpBtn" title="Mechanics reference" aria-label="Mechanics reference">?</button></div>
+    </header>
+
+    <main>
+      <section id="welcome" class="welcome-view">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="eyebrow-line"></span> HUMAN SESSION GENERATOR · BUILD 01</div>
+          <h1>THE GAME<br><span>BEGINS</span><i>.</i></h1>
+          <p class="hero-text">Build a whole session, not just a roster. Generate players, a viable server chain, entry plans, living Lands, and the trouble waiting beyond the gates.</p>
+          <div class="hero-actions"><button class="button primary" id="startBtn">Initialize session <span>↗</span></button><button class="button quiet" id="loadBtn">Load saved session</button></div>
+          <div class="micro-note"><span>▣</span> SEEDED GENERATION &nbsp;·&nbsp; LOCAL SAVES &nbsp;·&nbsp; NO ACCOUNT REQUIRED</div>
+        </div>
+        <div class="hero-art" aria-hidden="true"><div class="orbit orbit-a"></div><div class="orbit orbit-b"></div><div class="planet"><span>SB</span></div><div class="art-label label-one">THE MEDIUM <b>??:??:??</b></div><div class="art-label label-two">SESSION SIGNAL <b>● STABLE</b></div><div class="art-cross">+</div><div class="art-grid"></div></div>
+        <div class="feature-strip"><div><span class="feature-num">01</span><b>CONNECTED SYSTEMS</b><small>Your choices ripple across the session.</small></div><div><span class="feature-num">02</span><b>EXPLAINABLE WORLDS</b><small>Every Land has a reason to exist.</small></div><div><span class="feature-num">03</span><b>YOUR TIMELINE</b><small>Save, reopen, and replay the seed.</small></div></div>
+      </section>
+
+      <section id="setup" class="setup-view hidden">
+        <div class="section-heading"><button class="back-link" id="backWelcome">← BACK</button><div class="eyebrow">SESSION CONFIGURATION</div><h2>Set the parameters.</h2><p>Leave a field open and the session will decide. Fixed choices stay fixed.</p></div>
+        <form id="setupForm">
+          <div class="setup-grid">
+            <div class="form-card main-settings">
+              <div class="card-kicker">01 / SESSION FRAME</div>
+              <label>Session name<input id="sessionName" maxlength="48" placeholder="e.g. The Last Broadcast"></label>
+              <div class="field-row"><label>Generation mode<select id="mode"><option value="random">Randomized session</option><option value="guided">Guided session</option></select></label><label>Players<select id="playerCount"><option>2</option><option>3</option><option selected>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></label></div>
+              <div class="field-row"><label>Seed <span class="label-hint">REPRODUCIBLE</span><input id="seed" maxlength="32" placeholder="Generated on launch"></label><button class="dice-button" type="button" id="randomSeed" title="Generate a seed">⟳</button></div>
+              <div class="field-row"><label>Difficulty<select id="difficulty"><option>Relaxed</option><option selected>Standard</option><option>Challenging</option><option>Severe</option></select></label><label>Complications<select id="complications"><option value="standard">Standard</option><option value="elevated">Elevated</option><option value="disabled">Disabled</option></select></label></div>
+              <label>Session tone<select id="tone"><option value="">Let the session decide</option><option>Adventurous</option><option>Mysterious</option><option>Eerie</option><option>Whimsical</option><option>Dangerous</option></select></label>
+              <label class="checkline"><input type="checkbox" id="uniqueTitles" checked><span>Avoid duplicate Classpects when possible</span></label>
+            </div>
+            <div class="form-card guided-card" id="guidedCard">
+              <div class="card-kicker">02 / PLAYER CONSTRAINTS <span class="optional">OPTIONAL</span></div>
+              <p class="form-help">In Guided mode, lock any choices you already know. Unset fields are generated around them.</p>
+              <div id="guidedPlayers" class="guided-players"></div>
+              <div class="guided-foot">Names and locked values are preserved exactly. Server links can be assigned after generation.</div>
+            </div>
+          </div>
+          <div class="setup-footer"><div class="canon-note"><b>CANON NOTE</b><span>Classpect meanings are thematic interpretations. Session rules and generated outcomes are marked as implementation choices.</span></div><button class="button primary" type="submit">Generate session <span>↗</span></button></div>
+        </form>
+      </section>
+
+      <section id="sessionView" class="session-view hidden">
+        <div class="session-head"><div><div class="eyebrow"><span class="status-dot"></span> ACTIVE SESSION <span id="sessionModeLabel"></span></div><h2 id="sessionTitle"></h2><div class="session-meta" id="sessionMeta"></div></div><div class="session-actions"><button class="button small-button" id="saveBtn">Save</button><button class="button small-button" id="exportBtn">Export JSON</button><button class="button small-button" id="newBtn">＋ New session</button></div></div>
+        <nav class="tabs" id="tabs" aria-label="Session sections"><button class="tab active" data-tab="overview">Overview</button><button class="tab" data-tab="players">Players <span id="playerTabCount"></span></button><button class="tab" data-tab="network">Network</button><button class="tab" data-tab="lands">Lands</button><button class="tab" data-tab="entry">Entry sequence</button><button class="tab" data-tab="reference">Reference</button></nav>
+        <div id="tabContent" class="tab-content"></div>
+      </section>
+    </main>
+    <footer><span>SBURB SESSION CONSOLE</span><span>HUMAN SESSION · LOCAL SIMULATION</span><span>V 1.0 / <b>ITERATION 0</b></span></footer>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <dialog id="importDialog"><form method="dialog" class="dialog-card"><button class="dialog-close" value="cancel" aria-label="Close">×</button><div class="eyebrow">RESTORE TIMELINE</div><h3>Load a session</h3><p>Open a local SBURB session JSON file, or restore your most recently saved session.</p><div class="dialog-actions"><label class="button small-button file-button">Choose JSON<input type="file" id="fileInput" accept="application/json,.json"></label><button class="button primary" id="restoreBtn" value="default">Restore local save</button></div></form></dialog>
+  <script src="app.js"></script>
+</body>
+</html>
